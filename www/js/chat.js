@@ -3,11 +3,8 @@ $(function () {
     
     $('#name').val('123')
 
-    socket.emit('user connected', $('#name').val());
-
     $('form').submit(function(){
-        socket.emit('chat message', {name: $('#name').val(), 
-            msg: $('#m').val()}
+        socket.emit('chat message', {msg: $('#m').val()}
         );
         $('#m').val('');
         return false;
@@ -16,5 +13,8 @@ $(function () {
     socket.on('chat message', function(data){
         $('#messages').append($('<li>').html(
             '<font color = "red">' + data.name + '</font> : ' + data.msg));
+    });
+    socket.on('user connected', function(data){
+        $('#users').append($('<li>').html(data.name));
     });
 });
