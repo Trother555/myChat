@@ -4,21 +4,21 @@ let express = require('express');
 let app = express();
 let http = require('http').Server(app);
 let io = require('socket.io')(http);
-let axios = require('axios');
-let UserModel = require('./mongoUserModel');
 let cookieParser = require('cookie-parser')
-let cookie = require('cookie');
+let axios = require('axios');
 
-// time in seconds before user authentication expires
-const userTimeToLive = 1e5  ;
+let UserModel = require('./models/mongoUserModel');
+let chat = require('./services/chat')
 
-//app.use(cookieParser())
 app.use(express.static('./www/js'));
 app.use(cookieParser())
+
 
 let redirectURL = 'http://localhost:3000/vkauthorize';
 let appId = '6744098';
 let appSecret = '6RCwcpK3EVYvsIWfXQJh';
+
+chat.start(io, http);
 
 /**
  * Send error message as response
@@ -51,7 +51,6 @@ app.get('/vkauthorize', async (req, res) => {
         respondWithError(res, "Error: vk auth failed", 500);
         return;
     }
-    let expDate = new Date();
     expDate.setSeconds(expDate.getSeconds() + userTimeToLive);
     let userModel = await UserModel.findOne({id: authUserData.user_id});
     console.log(userModel);
@@ -59,7 +58,6 @@ app.get('/vkauthorize', async (req, res) => {
         userModel = new UserModel({
             nick: "Anonymous",
             id: authUserData.user_id,
-            expiresAt: expDate,
             secret: req.query.code,
         });
         res.cookie('secret', req.query.code);
@@ -79,46 +77,19 @@ app.get('/login', function(req, res) {
             res.redirect('/');
         return;
     }
-    res.sendFile(__dirname + '/www/index.html');
+    res.sendFile(__dirname + '/www/login.html');
 });
 
 app.get('/', async function(req, res){
     if (req.cookies.secret) {
-        let userModel = await UserModel.find({
+        let userModel = await UserModel.findOne({
             secret: req.cookies.secret, 
             id: req.cookies.id,
         });
-        if (!userModel) {
-            // TODO: redirect to login
+        if (userModel) {
+            res.sendFile(__dirname + '/www/index.html');
+            return;
         }
     }
-    res.sendFile(__dirname + '/www/index.html');
-});
-
-// chat
-io.on('connection', async function(socket) {
-    let cookies = cookie.parse(socket.handshake.headers.cookie);
-    let userModel = await UserModel.findOne({
-        secret: cookies.secret, 
-        id: cookies.id,
-    });
-    if (!userModel) {
-        socket.disconnect(true);
-        return;
-    }
-    console.log(`User ${userModel.nick} connected`)
-    io.emit('user connected', {name: userModel.nick});
-
-    socket.on('chat message', function(data){
-        console.log(data);
-        io.emit('chat message', {name: userModel.nick, msg: data.msg});
-    });
-
-    socket.on('disconnect', function(){
-        console.log(`User ${userModel.nick} disconnected`);
-    });
-});
-  
-http.listen(3000, function(){
-console.log('listening on *:3000');
+    res.redirect('/login');
 });

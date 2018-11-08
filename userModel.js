@@ -17,8 +17,7 @@ UserModel.prototype.isSecretExpired = function() {
     return false;
 }
 
-UserModel.prototype.setUnderlyingModel = function(model) {
-    // TODO: check if model has functionality
-    this.underModel = model;
+UserModel.prototype.findOne = function(id, secret) {
+    return this.underModel
 }
 
