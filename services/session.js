@@ -3,7 +3,7 @@
 /**
  * 
  * @class
- * @classdesc This class is to store chat users in server's RAM
+ * @classdesc This class is to store current chat users
  */
 function Session () {
     this.users = [];
@@ -25,7 +25,7 @@ function User () {
  */
 Session.prototype.store = function(user) {
     if (this.users.length > this.maxUsers) {
-        //TODO: pop the oldest user
+        //TODO: handle this somehow
     } else {
         if(!this.find(user.id, user.secret)) {
             this.users.push(user);
@@ -40,6 +40,20 @@ Session.prototype.store = function(user) {
 Session.prototype.find = function(id, secret) {
     return this.users.find((el) => el.id == id && el.secret == secret);
 }
+
+/**
+ * @param {String} id - id of user
+ * @returns - true if user is found and deleted else false
+ */
+Session.prototype.remove = function(id) {
+    let ind = this.users.findIndex((el) => el.id == id);
+    if (ind <0) {
+        return false;
+    }
+    this.users.splice(ind, 1);
+    return true; 
+}
+
 
 module.exports = {
     session: new Session(),

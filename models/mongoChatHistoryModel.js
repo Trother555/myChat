@@ -30,8 +30,8 @@ chatHistorySchema.methods.getHistory = function(date) {
 /**
  * Load chat history
  */
-chatHistorySchema.methods.loadHistory = async function(date) {
-    this.messages = (await ChatHistory.findOne({})).messages;
+chatHistorySchema.statics.loadHistory = async function(date) {
+    return (await ChatHistory.findOne({})) || new ChatHistory();
 }
 
 let ChatHistory = mongoose.model('ChatHistory', chatHistorySchema);
