@@ -56,7 +56,7 @@ app.get('/vkauthorize', async (req, res) => {
     console.log(userModel);
     if (!userModel) {
         userModel = new UserModel({
-            nick: "Anonymous",
+            name: "Anonymous",
             id: authUserData.user_id,
             secret: req.query.code,
         });

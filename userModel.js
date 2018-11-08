@@ -4,7 +4,7 @@
  * @param {Object} modelConstructor - a function that creates a new underlyingModel
  */
 function UserModel (modelConstructor){
-    this.nick = "";
+    this.name = "";
     this.vkId = "";
     this.email = "";
     this.secret = "";

@@ -10,7 +10,7 @@ db.once('open', function() {
 });
 
 var chatUserShema = new Schema({
-  nick: String,
+  name: String,
   id: String,
   email: String,
   secret: String,

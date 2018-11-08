@@ -11,6 +11,16 @@ function Session () {
 }
 
 /**
+ * @class
+ * @classdesc User class
+ */
+function User () {
+    this.name = "Anonymous";
+    this.id = "";
+    this.secret = "";
+}
+
+/**
  * @param {Object} user - user object {secret: secret, id: id}
  */
 Session.prototype.store = function(user) {
@@ -31,4 +41,7 @@ Session.prototype.find = function(id, secret) {
     return this.users.find((el) => el.id == id && el.secret == secret);
 }
 
-module.exports = new Session();
+module.exports = {
+    session: new Session(),
+    User: User,
+}

@@ -14,10 +14,10 @@ var chatHistorySchema = new Schema({
  * @param {Object} data - @see ChatMessage
  */
 chatHistorySchema.methods.appendMessage = async function(data) {
+    console.log(data);
     this.messages.push({name: data.name, msg: data.msg, time: data.time});
     await this.save();
 }
-
 /**
  * Get chat history since the date
  * @param {Date} date - date since wich to get the history
@@ -27,11 +27,18 @@ chatHistorySchema.methods.getHistory = function(date) {
     return this.messages;
 }
 
+/**
+ * Load chat history
+ */
+chatHistorySchema.methods.loadHistory = async function(date) {
+    this.messages = (await ChatHistory.findOne({})).messages;
+}
+
 let ChatHistory = mongoose.model('ChatHistory', chatHistorySchema);
 
 /**
  * 
- * @param {String} name - user nick
+ * @param {String} name - user name
  * @param {String} msg - user message
  * @param {Date} time - messaeg timestamp
  */

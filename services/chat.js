@@ -5,10 +5,14 @@ let cookie = require('cookie');
 let UserModel = require('./../models/mongoUserModel');
 let ChatHistory = require('./../models/mongoChatHistoryModel').ChatHistory;
 let ChatMessage = require('./../models/mongoChatHistoryModel').ChatMessage;
+let session = require('./session');
 
 let chatHistory = new ChatHistory();
 
-function start(io, http) {
+async function start(io, http) {
+    
+    await chatHistory.loadHistory();
+
     io.on('connection', async function(socket) {
 
         // authorization check
@@ -16,6 +20,7 @@ function start(io, http) {
             return;
         }
         let cookies = cookie.parse(socket.handshake.headers.cookie);
+        // TODO: check in session first
         let userModel = await UserModel.findOne({
             secret: cookies.secret, 
             id: cookies.id,
@@ -26,24 +31,24 @@ function start(io, http) {
         }
 
         // authorized
-        console.log(`User ${userModel.nick} connected`)
+        console.log(`User ${userModel.name} connected`)
 
-        io.emit('user connected', {name: userModel.nick});
+        io.emit('user connected', {name: userModel.name});
         socket.emit('chat history', chatHistory.getHistory());
 
         socket.on('chat message', function(data){
             // console.log(data);
-            let message  = new ChatMessage(data.name, data.msg, new Date());
+            let message  = new ChatMessage(userModel.name, data.msg, new Date());
             chatHistory.appendMessage(message);
             io.emit('chat message', {
-                name: userModel.nick, 
-                msg: data.msg, 
-                time: new Date(),
+                name: message.name, 
+                msg: message.msg, 
+                time: message.date,
             });
         });
     
         socket.on('disconnect', function(){
-            console.log(`User ${userModel.nick} disconnected`);
+            console.log(`User ${userModel.name} disconnected`);
         });
     });
     http.listen(3000, function(){

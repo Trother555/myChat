@@ -28,7 +28,7 @@ async function vkAuthorize(req, res) {
     let userModel = UserModel.find({vkId: authUserData.user_id});
     if (!userModel) {
         userModel = new UserModel({
-            nick: "Anonymous",
+            name: "Anonymous",
             vkId: authUserData.user_id,
             expiresAt: expDate,
             secret: req.query.code,
