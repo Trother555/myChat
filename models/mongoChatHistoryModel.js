@@ -22,7 +22,7 @@ chatHistorySchema.methods.appendMessage = async function(data) {
  * Get chat history since the date
  * @param {Date} date - date since wich to get the history
  */
-chatHistorySchema.methods.getHistory = async function(date) {
+chatHistorySchema.methods.getHistory = function(date) {
     // TODO get messages with date>date
     return this.messages;
 }

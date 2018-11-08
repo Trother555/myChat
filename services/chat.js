@@ -27,12 +27,13 @@ function start(io, http) {
 
         // authorized
         console.log(`User ${userModel.nick} connected`)
+
         io.emit('user connected', {name: userModel.nick});
         socket.emit('chat history', chatHistory.getHistory());
 
         socket.on('chat message', function(data){
-            console.log(data);
-            message  = new ChatMessage(data.name, data.msg, new Date());
+            // console.log(data);
+            let message  = new ChatMessage(data.name, data.msg, new Date());
             chatHistory.appendMessage(message);
             io.emit('chat message', {
                 name: userModel.nick, 
