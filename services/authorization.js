@@ -3,7 +3,7 @@
 let session = require('./session');
 let config = require('../config.json');
 
-let redirectURL = config.redirectURL;
+let redirectURL = process.env.redirectUrl || config.redirectURL;
 let appId = config.appId;
 let appSecret = config.appSecret;
 
