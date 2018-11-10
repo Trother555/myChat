@@ -10,7 +10,6 @@ let session = require('./session').session;
 async function start(io, http) {
 
     let chatHistory = await ChatHistory.loadHistory();
-    console.log(chatHistory);
     io.on('connection', async function(socket) {
         // authorization check
         if(!socket.handshake.headers.cookie) {
@@ -33,7 +32,6 @@ async function start(io, http) {
         }
 
         session.store({id: userModel.id, secret: userModel.secret});
-        console.log(session);
 
         // authorized
         console.log(`User ${userModel.name} connected`)

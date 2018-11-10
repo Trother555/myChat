@@ -14,7 +14,6 @@ var chatHistorySchema = new Schema({
  * @param {Object} data - @see ChatMessage
  */
 chatHistorySchema.methods.appendMessage = async function(data) {
-    console.log(data);
     this.messages.push({name: data.name, msg: data.msg, time: data.time});
     await this.save();
 }
