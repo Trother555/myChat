@@ -52,7 +52,6 @@ app.post('/changeMyName', async function(req, res) {
     }
     
     if(req.body.userName) {
-        console.log('hi')
         await user.rename(req.body.userName);
         res.redirect('/');
         return;

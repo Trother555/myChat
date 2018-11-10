@@ -73,8 +73,6 @@ async function vkAuthorize(req, res, UserModel) {
     res.redirect('/');
 }
 
-
-
 module.exports = {
     checkAuthorization,
     vkAuthorize,
