@@ -41,7 +41,7 @@ async function checkAuthorization(req, UserModel) {
         id: req.cookies.id,
     });
     if (userModel) {
-        return true;
+        return userModel;
     }
 }
 
