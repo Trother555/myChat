@@ -18,6 +18,7 @@ function User () {
     this.name = "Anonymous";
     this.id = "";
     this.secret = "";
+    this.socket = null;
 }
 
 /**
@@ -39,6 +40,13 @@ Session.prototype.store = function(user) {
  */
 Session.prototype.find = function(id, secret) {
     return this.users.find((el) => el.id == id && el.secret == secret);
+}
+
+/**
+ * @param {String} name - name of user
+ */
+Session.prototype.findByName = function(name) {
+    return this.users.find((el) => el.name == name);
 }
 
 /**

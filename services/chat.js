@@ -31,7 +31,8 @@ async function start(io, http) {
             return;
         }
 
-        session.store({id: userModel.id, secret: userModel.secret});
+        session.store({id: userModel.id, secret: userModel.secret, 
+            socket: socket, name: userModel.name});
 
         // authorized
         console.log(`User ${userModel.name} connected`)
@@ -40,7 +41,21 @@ async function start(io, http) {
         socket.emit('chat history', chatHistory.getHistory());
 
         socket.on('chat message', function(data){
-            // console.log(data);
+            // handle private message
+            if (data.msg && data.msg[0] == '@') {
+                let toName = data.msg.slice(1, data.msg.indexOf(' '));
+                let toUser = session.findByName(toName);
+                if (!toUser) {
+                    return;
+                }
+                toUser.socket.emit('private message', {
+                    name: userModel.name,
+                    msg: data.msg.slice(data.msg.indexOf(' ') + 1),
+                    time: new Date(),
+                })
+                return;
+            }
+            // handle mass message
             let message  = new ChatMessage(userModel.name, data.msg, new Date());
             chatHistory.appendMessage(message);
             io.emit('chat message', {

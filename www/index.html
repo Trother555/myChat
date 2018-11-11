@@ -20,7 +20,8 @@
           float: left;
           width: 50%;
           padding: 10px;
-          padding-bottom: 100px;
+          height: 80vh;
+          overflow-y: scroll;
 
       }
       /* Clear floats after the columns */
@@ -33,7 +34,7 @@
   </head>
   <body>
     <div class="row">
-        <div class="column" style="width: 70%">
+        <div class="column" id = "messagesContainer" style="width: 70%">
             <ul id="messages"></ul>
         </div>
         <div class="column" style="width: 30%">
