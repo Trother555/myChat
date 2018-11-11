@@ -1,9 +1,10 @@
 'use strict';
 
 var mongoose = require('mongoose');
+let config = require('../config.json');
 var Schema = mongoose.Schema;
 
-mongoose.connect(process.env.constring);
+mongoose.connect(process.env.constring || config.constring);
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
