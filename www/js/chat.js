@@ -13,6 +13,14 @@ $(function () {
         return false;
     });
 
+    $("#users").on('click', function (e) {
+        if (e.target !== e.currentTarget) {
+            var clickedItem = e.target;
+            $('#m').val(`@${clickedItem.innerText} `);
+        }
+        e.stopPropagation();
+    });
+
     function appendMessage(name, msg, private) {
         if(private) {
             $('#messages').append($('<li>').html(

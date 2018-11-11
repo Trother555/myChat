@@ -70,7 +70,6 @@ async function vkAuthorize(req, res, UserModel) {
     }
     res.cookie('secret', userModel.secret);
     res.cookie('id', userModel.id);
-    res.redirect('/');
 }
 
 module.exports = {

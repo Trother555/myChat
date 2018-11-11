@@ -24,6 +24,7 @@ app.get('/vkauthorize', async (req, res) => {
         return;
     }
     await auth.vkAuthorize(req, res, UserModel);
+    res.redirect('/changeMyName');
 });
 
 app.get('/login', async function(req, res) {
