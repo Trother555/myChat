@@ -40,7 +40,6 @@ async function start(io, http) {
 
         io.emit('user connected', {name: userModel.name, chatId: chatId});
         socket.emit('chat history', chatHistory.getHistory());
-        socket.emit('current users', )
 
         socket.on('chat message', function(data){
             // handle private message
