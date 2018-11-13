@@ -40,7 +40,14 @@ $(function () {
     });
 
     socket.on('user connected', function(data){
-        $('#users').append($('<li>').html(data.name));
+        console.log($(`li#${data.chatId}`).get()[0]);
+        if (!$(`li#${data.chatId}`).get()[0]){
+            $('#users').append($(`<li id=${data.chatId}>`).html(data.name));
+        }
+    });
+
+    socket.on('user disconnected', function(data){
+        $(`li#${data.chatId}`).remove();
     });
 
     socket.on('chat history', (data) => {

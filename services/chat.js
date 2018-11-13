@@ -6,6 +6,7 @@ let UserModel = require('./../models/mongoUserModel');
 let ChatHistory = require('./../models/mongoChatHistoryModel').ChatHistory;
 let ChatMessage = require('./../models/mongoChatHistoryModel').ChatMessage;
 let session = require('./session').session;
+let md5 = require('md5');
 
 async function start(io, http) {
 
@@ -30,15 +31,16 @@ async function start(io, http) {
             socket.disconnect(true);
             return;
         }
-
+        let chatId =  md5(userModel.id);
         session.store({id: userModel.id, secret: userModel.secret, 
-            socket: socket, name: userModel.name});
+            socket: socket, name: userModel.name, chatId: md5(userModel.id)});
 
         // authorized
         console.log(`User ${userModel.name} connected`)
 
-        io.emit('user connected', {name: userModel.name});
+        io.emit('user connected', {name: userModel.name, chatId: chatId});
         socket.emit('chat history', chatHistory.getHistory());
+        socket.emit('current users', )
 
         socket.on('chat message', function(data){
             // handle private message
@@ -68,6 +70,7 @@ async function start(io, http) {
         socket.on('disconnect', function() {
             if(session.remove(userModel.id)) {
                 console.log(`User ${userModel.name} disconnected`);
+                io.emit('user disconnected', {chatId: userModel.chatId});
             }
         });
     });
